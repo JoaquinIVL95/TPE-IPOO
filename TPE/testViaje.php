@@ -38,6 +38,8 @@ while(true){
             echo "Ingrese capacidad maxima de personas: ";
             $capMaxima = trim(fgets(STDIN));
             $objViaje->setMaxCantP($capMaxima);
+
+            echo "Cambios realizados \n\n";
             break;
         
         case '2':
