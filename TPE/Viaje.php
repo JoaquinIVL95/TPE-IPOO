@@ -92,10 +92,10 @@ Class Viaje{
         foreach ($pasajeros as $index => $pasajero) {
             if ($pasajero->getDni() == $dni) {
                 unset($this->pasajeros[$index]);
-                return true; // Elemento encontrado y eliminado
+                $eliminado = true;
             }
         }
-        return false; // Elemento no encontrado
+        return $eliminado; 
     }
 
 
