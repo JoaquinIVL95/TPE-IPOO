@@ -7,7 +7,7 @@ include 'ResponsableV.php';
 
 
 
-$objResponsableV = new ResponsableV ("123"  , "4412", "pedro" , "zahas", "38892491");
+$objResponsableV = new ResponsableV ("123"  , "4412", "pedro" , "zahas", "1");
 
 $objViaje = new Viaje("14","Neuquén",50, $objResponsableV);
 
@@ -57,6 +57,7 @@ while(true){
             
             $objResponsableV = new ResponsableV($numEmp , $licencia, $nomResp, $apeResp, $dniRespV);
             $respValido = $objViaje->agregarResponsable($objResponsableV);
+            // echo $respValido;
             if($respValido == true) {
                 echo "Error al agregar el responsable.\n\n";    
             } else{
@@ -90,13 +91,13 @@ while(true){
 
         case '4':
             echo "Los datos del viaje son: \n" . $objViaje . "\n" . 
-            $objResponsableV . "\n" ;
+            $objViaje->devolverArreglos($objViaje->getResponsable()) . "\n" ;
             
 
             break;
         
         case '5':
-
+            // echo $objViaje->cantPasajeros( ) .  "\n\n" ;
             echo $objViaje->listaPasajeros() . "\n\n";
 
             break;

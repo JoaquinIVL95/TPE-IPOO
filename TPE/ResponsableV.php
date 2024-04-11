@@ -62,6 +62,6 @@ Class ResponsableV{
     public function __toString()
     {
         return  "El responsable de viaje es el empleado: " . $this->getNumEmp() . " , " .
-        $this->getNomb(). " " . $this->getApellido() . " , numero de liciencia: " .  $this->getNumLic() . "\n";
+        $this->getNomb(). " " . $this->getApellido() . " , numero de liciencia: " .  $this->getNumLic() . "\n" . "Numero de Dni: " . $this->getDniResp();
     }
 }

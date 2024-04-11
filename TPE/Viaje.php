@@ -6,16 +6,16 @@ Class Viaje{
     private $viajeCod;
     private $destino;
     private $maxCantP;
-    private $pasajeros;
+    private $arrayPasajeros;
     private $responsable;
 
-    public function __construct($codigoViaje , $destino, $capacidadMax )
+    public function __construct($codigoViaje , $destino, $capacidadMax, $responsableActual )
     {
         $this->viajeCod = $codigoViaje; 
         $this->destino=$destino;
         $this->maxCantP= $capacidadMax;
-        $this->responsable = array();  
-        $this->pasajeros = array();
+        $this->responsable = array($responsableActual);  
+        $this->arrayPasajeros = array();
     }
 
     public function getViajeCod(){
@@ -40,10 +40,10 @@ Class Viaje{
     }
 
     public function getPasajeros(){
-        return $this->pasajeros;
+        return $this->arrayPasajeros;
     }
     public function setPasajeros($aPasajeros){
-        $this->pasajeros=$aPasajeros;
+        $this->arrayPasajeros=$aPasajeros;
     }
 
     public function getResponsable(){
@@ -53,35 +53,58 @@ Class Viaje{
         $this->responsable=$responsable;
     }
 
+
     public function agregarResponsable(ResponsableV $responsableV){
         $error = false;
-        $responsable = $this->getResponsable();
-        foreach ($responsable as $p) {
+        $responsables = $this->getResponsable();
+        
+        $i = 0;
+        $n = count($responsables);
+        while (!$error && $i < $n) {
+            $p = $responsables[$i];
             if ($p->getDniResp() == $responsableV->getDniResp()) {
                 $error = true;
-                
+                // echo "error";
             }
+            $i++;
         }
-        if (!$error) {
-            $this->responsable[] = $responsableV;
+
+        if ($error == false) {
+            // Solo agregar el nuevo responsable si no hay error
+            $responsables[] = $responsableV;
+            $this->setResponsable($responsables);
+            // echo "error if";
         }
+        
         return $error;
     }
 
 
+    
+
+
     public function agregarPasajeros(Personas $pasajero){
+        
         $error = false;
         $pasajeros = $this->getPasajeros();
-        foreach ($pasajeros as $p) {
+        
+        $i = 0;
+        $n = count($pasajeros);
+        while (!$error && $i < $n) {
+            $p = $pasajeros[$i];
             if ($p->getDni() == $pasajero->getDni()) {
                 $error = true;
-                
             }
+            $i++;
         }
+    
         if (!$error) {
-            $this->pasajeros[] = $pasajero;
+            $pasajeros[] = $pasajero;
+            $this->setPasajeros($pasajeros);
+            
         }
         return $error;
+    
     }
 
 
@@ -91,7 +114,7 @@ Class Viaje{
         $eliminado = false;
         foreach ($pasajeros as $index => $pasajero) {
             if ($pasajero->getDni() == $dni) {
-                unset($this->pasajeros[$index]);
+                unset($this->arrayPasajeros[$index]);
                 $eliminado = true;
             }
         }
@@ -111,7 +134,7 @@ Class Viaje{
 
 
 
-    private function devolverArreglos($arreglo){
+    public function devolverArreglos($arreglo){
         $cadena= "\n";
         foreach ($arreglo as $elemento){
             $cadena =  $cadena . " " .$elemento . "\n";
