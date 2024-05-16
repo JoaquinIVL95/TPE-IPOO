@@ -6,16 +6,20 @@ Class Viaje{
     private $viajeCod;
     private $destino;
     private $maxCantP;
-    private $arrayPasajeros;
+    private $colPasajeros;
     private $responsable;
+    private $costoViaje;
+    private $montoTotalAbonado;
 
-    public function __construct($codigoViaje , $destino, $capacidadMax, $responsableActual )
+    public function __construct($codigoViaje , $destino, $capacidadMax, $responsableV, $colPasajeros, $costoViaje , $montoTotalAbonado )
     {
         $this->viajeCod = $codigoViaje; 
         $this->destino=$destino;
         $this->maxCantP= $capacidadMax;
-        $this->responsable = array($responsableActual);  
-        $this->arrayPasajeros = array();
+        $this->responsable = $responsableV;  
+        $this->colPasajeros = $colPasajeros;
+        $this->costoViaje = $costoViaje;
+        $this->montoTotalAbonado = $montoTotalAbonado;
     }
 
     public function getViajeCod(){
@@ -40,10 +44,10 @@ Class Viaje{
     }
 
     public function getPasajeros(){
-        return $this->arrayPasajeros;
+        return $this->colPasajeros;
     }
     public function setPasajeros($aPasajeros){
-        $this->arrayPasajeros=$aPasajeros;
+        $this->colPasajeros=$aPasajeros;
     }
 
     public function getResponsable(){
@@ -51,6 +55,20 @@ Class Viaje{
     }
     public function setResponsable($responsable){
         $this->responsable=$responsable;
+    }
+
+    public function getCostoViaje(){
+        return $this->costoViaje;
+    }
+    public function setCostoViaje($costoViaje){
+        $this->costoViaje = $costoViaje;
+    }
+
+    public function getMontoTotalAbonado(){
+        return $this->montoTotalAbonado;
+    }
+    public function setMontoTotalAbonado($montoTotalAbonado){
+        $this->montoTotalAbonado = $montoTotalAbonado;
     }
 
 
@@ -83,28 +101,31 @@ Class Viaje{
     
 
 
-    public function agregarPasajeros(Personas $pasajero){
+    // public function agregarPasajeros(Personas $pasajero){
         
-        $error = false;
-        $pasajeros = $this->getPasajeros();
+    //     $error = false;
+    //     $pasajeros = $this->getPasajeros();
         
-        $i = 0;
-        $n = count($pasajeros);
-        while (!$error && $i < $n) {
-            $p = $pasajeros[$i];
-            if ($p->getDni() == $pasajero->getDni()) {
-                $error = true;
-            }
-            $i++;
-        }
+    //     $i = 0;
+    //     $n = count($pasajeros);
+    //     while (!$error && $i < $n) {
+    //         $p = $pasajeros[$i];
+    //         if ($p->getDni() == $pasajero->getDni()) {
+    //             $error = true;
+    //         }
+    //         $i++;
+    //     }
     
-        if (!$error) {
-            $pasajeros[] = $pasajero;
-            $this->setPasajeros($pasajeros);
+    //     if (!$error) {
+    //         $pasajeros[] = $pasajero;
+    //         $this->setPasajeros($pasajeros);
             
-        }
-        return $error;
+    //     }
+    //     return $error;
     
+    // }
+    public function agregarPasajero($objPasajero){
+        $this->setPasajeros(count($this->getPasajeros()), $objPasajero);
     }
 
 
@@ -114,11 +135,38 @@ Class Viaje{
         $eliminado = false;
         foreach ($pasajeros as $index => $pasajero) {
             if ($pasajero->getDni() == $dni) {
-                unset($this->arrayPasajeros[$index]);
+                unset($this->getPasajeros()[$index]);
                 $eliminado = true;
             }
         }
         return $eliminado; 
+    }
+
+    public function hayPasajesDisponibles(){
+
+        $maxCantP = $this->getMaxCantP();
+        $colPasajeros = $this->getPasajeros();
+        $cantP = count($colPasajeros);
+        $pasajeDisponible = false;
+
+        if($cantP < $maxCantP){
+            $pasajeDisponible = true;
+        }
+
+        return $pasajeDisponible;
+    }
+
+    public function venderPasaje($objPasajero){
+        $costo = -1;
+        if($this->hayPasajesDisponibles()){
+            //se reescribe el numero de ticket que tiene objPasajero ya que la venta se realiza aqui
+            $numeroTicket = count($this->getPasajeros()) + 1;
+            $objPasajero->setNumTicket($numeroTicket);
+            $this->agregarPasajero($objPasajero);
+            $costo += $costo * $objPasajero->darPorcentajeIncremento();
+            $this->setMontoTotalAbonado($this->getMontoTotalAbonado() + $costo);
+        }
+        return $costo;
     }
 
 
@@ -141,6 +189,8 @@ Class Viaje{
         }
         return $cadena;
     }
+
+    
 
 
 
